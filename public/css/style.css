@@ -97,21 +97,37 @@ html, body {
     text-decoration: none;
     cursor: pointer;
 }
-.btn:hover,
-.btn-sm:hover {
-    background: var(--primaryhover);
-}
 .btn-sm {
     background: var(--primary);
     color: var(--dark);
     font-size: smaller;
     font-weight: bold;
     padding: 4px 6px;
-    border-radius: 5px;
+    border-radius: 3px;
     border: none;
     text-decoration: none;
     cursor: pointer;
 }
+.btn-sm-outline {
+    background: transparent;
+    color: var(--gray);
+    font-size: smaller;
+    font-weight: regular;
+    padding: 4px 6px;
+    border-radius: 3px;
+    border: 1px solid var(--gray);
+    text-decoration: none;
+    cursor: pointer;
+}
+.btn-sm-outline:hover {
+    color: var(--primary);
+    border: 1px solid var(--primary);
+}
+.btn:hover,
+.btn-sm:hover {
+    background: var(--primaryhover);
+}
+
 
 
 
@@ -149,6 +165,7 @@ html, body {
     background-color: var(--darkhover);
 }
 
+
 /* MARKS */
 .check-mark {
     background-color: transparent;
@@ -157,6 +174,25 @@ html, body {
     font-size: 12px;
     padding: 0;
 }
+
+
+/* ----SUCCESS ERROR MESSAGE---- */
+/* this style is for success and error messages */
+.success {
+    color: #4caf50;
+    font-size: 12px;
+    margin-top: 10px;
+    text-align: center;
+    font-weight: 500;
+}
+.error {
+    color: #f44336;
+    font-size: 12px;
+    margin-top: 10px;
+    text-align: center;
+    font-weight: 500;
+}
+
 
 
 /* FORM */

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Task;
+use App\Models\StatusLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -26,6 +27,7 @@ Class TaskController extends Controller
     // Store
     public function store(Request $request)
     {
+
         // Validate Form Input
         $validated = $request->validate([
             'order_date' => 'required|date',
@@ -57,12 +59,36 @@ Class TaskController extends Controller
         return redirect()->route('tasks.index')->with('success', 'Order added successfully!');
     }
 
+    // Store Status
+    public function storeStatus(Request $request, Task $task)
+    {
+        $validated = $request->validate([
+            'status' => 'required|in:Pending,Shipped,Delivered,Cancelled'
+        ]);
 
-    // Display
+        StatusLog::create([
+            'task_id' => $task->id,
+            'status' => $validated['status'],
+            'changed_at' => now(),
+        ]);
+        return redirect()->route('tasks.index')->with('success', 'Order status updated successfully.');
+    }
+
+
+    // Show Task
     public function show(Task $task)
     {
         return view('tasks.show', compact('task'));
     }
+    
+    // Show StatusLog
+    public function showStatus(Task $task)
+    {
+        return view('tasks.order-status', compact('task'));
+    }
+
+
+
 
     // Edit
     public function edit(Task $task)

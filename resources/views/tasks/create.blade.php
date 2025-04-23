@@ -4,12 +4,14 @@
 @section('content')
     <h2 class="section-title">Create New Order</h2>
 
-    @if($errors->any())
-        <ul class="error-list">
-            @foreach($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
     @endif
 
     <form action="{{ route('tasks.store') }}" method="POST" class="form-wrapper">

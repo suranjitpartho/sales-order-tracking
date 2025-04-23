@@ -11,7 +11,9 @@
 </head>
 <body>
 
-    <!-- Navigation Bar -->
+
+    <!-- NAVIGATION BAR -->
+    
     <nav class="navbar">
         <div class="container">
             <a href="{{ route('tasks.index') }}" class="logo">SALES ORDER TRACKING</a>
@@ -19,6 +21,14 @@
                 <li><a href="{{ route('dashboard') }}" class="btn">Dashboard</a></li>
                 <li><a href="{{ route('tasks.index') }}" class="btn">Orders</a></li>
                 <li><a href="{{ route('tasks.create') }}" class="btn">New Order</a></li>
+                @auth
+                <li>
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button type="submit" class="btn">Logout</button>
+                    </form>
+                </li>
+                @endauth
             </ul>
         </div>
     </nav>

@@ -2,6 +2,13 @@
 @section('title', 'Order List')
 
 @section('content')
+
+    @if (session('success'))
+        <div class="alert alert-success">
+            {{ session('success') }}
+        </div>
+    @endif
+
     <h2 class="section-title">Order List</h2>
     <div class="table-wrapper">
         <table class="order-table">
@@ -13,6 +20,7 @@
                     <th>Category</th>
                     <th>Gender</th>
                     <th>Total Sales</th>
+                    <th>Status</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -25,6 +33,11 @@
                         <td>{{ ucfirst($task->product_category) }}</td>
                         <td>{{ ucfirst($task->buyer_gender) }}</td>
                         <td>${{ number_format($task->total_sales, 2) }}</td>
+                        <td>
+                            <a href="{{ route('tasks.status.show', $task->id) }}" class="btn-sm-outline">
+                                {{ $task->statuslog->last()->status ?? 'Pending' }}
+                            </a>
+                        </td>
                         <td>
                             <a href="{{ route('tasks.show', $task) }}" class="btn-sm">View</a>
                             <a href="{{ route('tasks.edit', $task) }}" class="btn-sm">Edit</a>
