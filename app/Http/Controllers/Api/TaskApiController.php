@@ -104,9 +104,10 @@ class TaskApiController extends Controller
     }
 
     
-    /* DELETE ORDER - API
-    This API method deletes an existing order from the database.
-    It accepts a DELETE request with the order ID in the URL.
+    /**
+     * DELETE ORDER - API
+     * This API method deletes an existing order from the database.
+     * It accepts a DELETE request with the order ID in the URL.
     */
 
     public function destroy($id)

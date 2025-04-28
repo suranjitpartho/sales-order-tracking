@@ -5,15 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-/*
-
-TASK MODEL
-------------------------------------
-This model represents a Order Table in the application.
-It contains the properties and methods to interact with the database.
-The model is used to perform CRUD operations on the Order Table.
-
-*/
+/**
+ * TASK MODEL
+ * 
+ * This model represents a Order Table in the application.
+ * It contains the properties and methods to interact with the database.
+ * The model is used to perform CRUD operations on the Order Table.
+ */
 
 class Task extends Model
 {

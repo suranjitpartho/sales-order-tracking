@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 
 Class TaskController extends Controller
 {
-    // Index
+    // INDEX - Show all orders
     public function index()
     {
         $tasks = Task::latest()->get();
@@ -17,21 +17,21 @@ Class TaskController extends Controller
     }
 
 
-    // Create
+    // CREATE - Show form to create a new order
     public function create()
     {
         return view('tasks.create');
     }
 
 
-    // Store
+    // STORE - This method handles the form submission for creating a new order
     public function store(Request $request)
     {
 
         // Validate Form Input
         $validated = $request->validate([
             'order_date' => 'required|date',
-            'product_id' => 'required|string|max:6',
+            'product_id' => 'required|string|size:6',
             'product_category' => 'required|in:clothing,ornaments,other',
             'buyer_gender' => 'required|in:male,female',
             'buyer_age' => 'required|integer|min:0',
@@ -48,18 +48,26 @@ Class TaskController extends Controller
 
         // Handle Shipping Charges
         $validated['shipping_charges'] = $validated['international_shipping']
-        ? ($validated['shipping_charges'] ?? 0)
-        : 0;
+            ? ($validated['shipping_charges'] ?? 0)
+            : 0;
 
         // Calculated Fields
         $validated['sales_per_unit'] = $validated['sales_price'] + $validated['shipping_charges'];
         $validated['total_sales'] = $validated['sales_per_unit'] * $validated['quantity'];
 
-        Task::create($validated);
+        // Create a new order
+        $task = Task::create($validated);
+
+        // Immediately log initial status as "Pending"
+        $task->statuslog()->create([
+            'status' => 'Pending',
+            'changed_at' => now(),
+        ]);
+
         return redirect()->route('tasks.index')->with('success', 'Order added successfully!');
     }
 
-    // Store Status
+    // STORE ORDER STATUS - This method handles the form submission for updating the order status
     public function storeStatus(Request $request, Task $task)
     {
         $validated = $request->validate([
@@ -75,35 +83,33 @@ Class TaskController extends Controller
     }
 
 
-    // Show Task
+    // SHOW - Show a single order
     public function show(Task $task)
     {
         return view('tasks.show', compact('task'));
     }
     
-    // Show StatusLog
+    // SHOW STATUS LOGS - Show order status logs
     public function showStatus(Task $task)
     {
         return view('tasks.order-status', compact('task'));
     }
 
 
-
-
-    // Edit
+    // EDIT - Show form to edit an order
     public function edit(Task $task)
     {
         return view('tasks.edit', compact('task'));
     }
     
 
-    // Update
+    // UPDATE - This method handles the form submission for updating an order
     public function update(Request $request, Task $task)
     {
         // Validate Form Input
         $validated = $request->validate([
             'order_date' => 'required|date',
-            'product_id' => 'required|string|max:6',
+            'product_id' => 'required|string|size:6',
             'product_category' => 'required|in:clothing,ornaments,other',
             'buyer_gender' => 'required|in:male,female',
             'buyer_age' => 'required|integer|min:0',
@@ -113,6 +119,8 @@ Class TaskController extends Controller
             'shipping_charges' => 'nullable|numeric|min:0',
             'quantity' => 'required|integer|min:1',
             'remarks' => 'nullable|string',
+        ], [
+            'product_id.size' => 'Product ID must be exactly 6 characters.',
         ]);
 
         // Handle Checkbox value
@@ -132,8 +140,7 @@ Class TaskController extends Controller
     }
 
 
-
-    // Remove
+    // DESTROY - Delete an order
     public function destroy(Task $task)
     {
         $task->delete();
@@ -142,7 +149,7 @@ Class TaskController extends Controller
 
 
 
-    // Dashboard
+    // DASHBOARD
     public function dashboard()
     {
         $totalSales = Task::sum('total_sales');

@@ -179,7 +179,7 @@ html, body {
 /* ----SUCCESS ERROR MESSAGE---- */
 /* this style is for success and error messages */
 .success {
-    color: #4caf50;
+    color: #66c748;
     font-size: 12px;
     margin-top: 10px;
     text-align: center;

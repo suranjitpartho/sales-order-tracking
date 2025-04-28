@@ -4,16 +4,6 @@
 @section('content')
     <h2 class="section-title">Create New Order</h2>
 
-    @if ($errors->any())
-        <div class="alert alert-danger">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
-
     <form action="{{ route('tasks.store') }}" method="POST" class="form-wrapper">
         @csrf
 
@@ -24,7 +14,7 @@
 
         <div class="form-group">
             <label for="product_id">Product ID</label>
-            <input type="text" name="product_id" id="product_id" maxlength="6" required>
+            <input type="text" name="product_id" id="product_id" :value="old('product_id')" minlength="6" maxlength="6" required placeholder="Product ID">
         </div>
 
         <div class="form-group">

@@ -6,14 +6,31 @@
 
     <form action="{{ route('tasks.status.store', $task->id) }}" method="POST" class="form-wrapper">
         @csrf
+        @php
+            // Fetch the very latest status-log (by changed_at, or by id if you prefer)
+            $latestLog = $task
+                ->statuslog()          // the Eloquent relation
+                ->orderByDesc('changed_at')
+                ->first();
+
+            // If there isn’t one for some reason, fall back to “Pending”
+            $current = $latestLog 
+                ? $latestLog->status 
+                : 'Pending';
+
+            // Build your options array
+            $statuses = ['Pending','Shipped','Delivered','Cancelled'];
+        @endphp
+
         <div class="form-group">
             <label for="status">Order Status:</label>
             <select name="status" id="status" required>
-                <option value="">-- Select Category --</option>
-                <option value="Pending">Pending</option>
-                <option value="Shipped">Shipped</option>
-                <option value="Delivered">Delivered</option>
-                <option value="Cancelled">Cancelled</option>
+                @foreach($statuses as $status)
+                    <option value="{{ $status }}"
+                        {{ old('status', $current) === $status ? 'selected' : '' }}>
+                        {{ $status }}
+                    </option>
+                @endforeach
             </select>
         </div>
 
