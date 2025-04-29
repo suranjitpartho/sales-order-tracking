@@ -3,7 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TaskController;
 
-/*
+
+/**
 WEB ROUTES
 These routes are used for web requests.
 To handle HTTP requests and responses.

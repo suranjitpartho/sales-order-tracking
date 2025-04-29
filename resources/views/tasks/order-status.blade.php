@@ -42,7 +42,7 @@
 
     <br>
 
-    <h3 class="section-title">Status Upate History</h3>
+    <h3 class="section-title">Status Update History</h3>
     <table class="order-table">
         <thead>
             <tr>

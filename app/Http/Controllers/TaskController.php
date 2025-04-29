@@ -92,7 +92,8 @@ Class TaskController extends Controller
     // SHOW STATUS LOGS - Show order status logs
     public function showStatus(Task $task)
     {
-        return view('tasks.order-status', compact('task'));
+        $statusLogs = $task->statuslog()->orderBy('changed_at', 'desc')->get();
+        return view('tasks.order-status', compact('task', 'statusLogs'));
     }
 
 
