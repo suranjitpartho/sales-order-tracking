@@ -9,12 +9,21 @@
 
         <div class="form-group">
             <label for="order_date">Order Date</label>
-            <input type="date" name="order_date" id="order_date" required>
+            <input type="date" name="order_date" id="order_date" required placeholder="Order Date">
         </div>
 
         <div class="form-group">
             <label for="product_id">Product ID</label>
-            <input type="text" name="product_id" id="product_id" :value="old('product_id')" minlength="6" maxlength="6" required placeholder="Product ID">
+            <select name="product_id" id="product_id">
+                <option value="">-- Select Category --</option>
+                <option value="SX9001">SX9001</option>
+                <option value="SX9002">SX9002</option>
+                <option value="SX9003">SX9003</option>
+                <option value="SX9004">SX9004</option>
+                <option value="SX9005">SX9005</option>
+                <option value="SX9006">SX9006</option>
+            </select>
+            <!-- <input type="text" name="product_id" id="product_id" :value="old('product_id')" minlength="6" maxlength="6" required placeholder="Product ID"> -->
         </div>
 
         <div class="form-group">

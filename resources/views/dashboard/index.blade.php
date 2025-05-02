@@ -37,9 +37,15 @@
 </div>
 @endsection
 
+
+
+<!-- JavaScripts for Dashboard Charts -->
+
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
+
+    // BAR CHART
     const barChart = new Chart(document.getElementById('barChart'), {
         type: 'bar',
         data: {
@@ -73,6 +79,7 @@
         }
     });
 
+    // PIE CHART
     const pieChart = new Chart(document.getElementById('pieChart'), {
         type: 'pie',
         data: {
@@ -102,6 +109,7 @@
         }
     });
 
+    // LINE CHART
     const lineChart = new Chart(document.getElementById('lineChart'), {
         type: 'line',
         data: {
@@ -140,6 +148,8 @@
         }
     });
 
+
+    // LOCATION CHART
     const locationChart = new Chart(document.getElementById('locationChart'), {
         type: 'bar',
         data: {

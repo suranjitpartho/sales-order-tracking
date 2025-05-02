@@ -52,7 +52,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach ($task->statuslog as $log)
+            @foreach ($task->statuslog()->orderByDesc('changed_at')->get() as $log)
                 <tr>
                     <td>{{ $log->task_id }}</td>
                     <td>{{ $log->created_at }}</td>

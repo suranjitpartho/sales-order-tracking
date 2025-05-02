@@ -31,7 +31,8 @@ Class TaskController extends Controller
         // Validate Form Input
         $validated = $request->validate([
             'order_date' => 'required|date',
-            'product_id' => 'required|string|size:6',
+            // 'product_id' => 'required|string|size:6',
+            'product_id' => 'required|in:SX9001,SX9002,SX9003,SX9004,SX9005,SX9006',
             'product_category' => 'required|in:clothing,ornaments,other',
             'buyer_gender' => 'required|in:male,female',
             'buyer_age' => 'required|integer|min:0',
@@ -92,8 +93,8 @@ Class TaskController extends Controller
     // SHOW STATUS LOGS - Show order status logs
     public function showStatus(Task $task)
     {
-        $statusLogs = $task->statuslog()->orderBy('changed_at', 'desc')->get();
-        return view('tasks.order-status', compact('task', 'statusLogs'));
+        // $statusLogs = $task->statuslog()->orderBy('changed_at', 'desc')->get();
+        return view('tasks.order-status', compact('task'));
     }
 
 
@@ -110,7 +111,7 @@ Class TaskController extends Controller
         // Validate Form Input
         $validated = $request->validate([
             'order_date' => 'required|date',
-            'product_id' => 'required|string|size:6',
+            'product_id' => 'required|in:SX9001,SX9002,SX9003,SX9004,SX9005,SX9006',
             'product_category' => 'required|in:clothing,ornaments,other',
             'buyer_gender' => 'required|in:male,female',
             'buyer_age' => 'required|integer|min:0',

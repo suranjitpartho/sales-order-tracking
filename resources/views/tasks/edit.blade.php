@@ -22,7 +22,15 @@
 
     <div class="form-group">
       <label for="product_id">Product ID</label>
-      <input type="text" name="product_id" id="product_id" maxlength="6" value="{{ $task->product_id }}" required>
+      <select name="product_id" id="product_id" required>
+        <option value="SX9001" {{ $task->product_id == 'SX9001' ? 'selected' : '' }}>SX9001</option>
+        <option value="SX9002" {{ $task->product_id == 'SX9002' ? 'selected' : '' }}>SX9002</option>
+        <option value="SX9003" {{ $task->product_id == 'SX9003' ? 'selected' : '' }}>SX9003</option>
+        <option value="SX9004" {{ $task->product_id == 'SX9004' ? 'selected' : '' }}>SX9004</option>
+        <option value="SX9005" {{ $task->product_id == 'SX9005' ? 'selected' : '' }}>SX9005</option>
+        <option value="SX9006" {{ $task->product_id == 'SX9006' ? 'selected' : '' }}>SX9006</option>
+      </select>
+      <!-- <input type="text" name="product_id" id="product_id" maxlength="6" value="{{ $task->product_id }}" required> -->
     </div>
 
     <div class="form-group">

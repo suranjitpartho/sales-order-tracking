@@ -17,6 +17,7 @@
         <div><strong>Sales Per Unit:</strong> ${{ number_format($task->sales_per_unit, 2) }}</div>
         <div><strong>Quantity:</strong> {{ $task->quantity }}</div>
         <div><strong>Total Sales:</strong> <span class="highlight">${{ number_format($task->total_sales, 2) }}</span></div>
+        <div><strong>Status:</strong> {{ $task->statuslog->last()->status ?? 'Pending' }}</div>
         <div><strong>Remarks:</strong> {{ $task->remarks ?? 'N/A' }}</div>
     </div>
 

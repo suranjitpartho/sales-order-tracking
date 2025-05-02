@@ -33,7 +33,7 @@ class TaskApiController extends Controller
     {
         $data = $request->validate([
             'order_date'             => 'required|date',
-            'product_id'             => 'required|string|max:6',
+            'product_id'             => ['required', Rule::in(['SX9001','SX9002','SX9003','SX9004','SX9005','SX9006'])],
             'product_category'       => ['required', Rule::in(['clothing','ornaments','other'])],
             'buyer_gender'           => ['required', Rule::in(['male','female'])],
             'buyer_age'              => 'required|integer|min:0',
@@ -73,7 +73,7 @@ class TaskApiController extends Controller
 
         $data = $request->validate([
             'order_date'             => 'sometimes|date',
-            'product_id'             => 'sometimes|string|max:6',
+            'product_id'             => ['sometimes', Rule::in(['SX9001','SX9002','SX9003','SX9004','SX9005','SX9006'])],
             'product_category'       => ['sometimes', Rule::in(['clothing','ornaments','other'])],
             'buyer_gender'           => ['sometimes', Rule::in(['male','female'])],
             'buyer_age'              => 'sometimes|integer|min:0',
