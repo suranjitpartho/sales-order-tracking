@@ -6,6 +6,8 @@ use App\Models\Task;
 use App\Models\StatusLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
+
 
 Class TaskController extends Controller
 {
@@ -152,35 +154,94 @@ Class TaskController extends Controller
 
 
     // DASHBOARD
-    public function dashboard()
+    public function dashboard(Request $request)
     {
-        $totalSales = Task::sum('total_sales');
-        $totalOrders = Task::count();
-        $totalQuantity = Task::sum('quantity');
-        $totalShippingCharges = Task::sum('shipping_charges');
+        // Read the filter param (default = lifetime)
+        $filter = $request->get('filter', 'lifetime');
 
-        $ordersByProduct = Task::select('product_id', DB::raw('count(*) as total'))
+        // Determine the date range based on the filter
+        switch ($filter) {
+            case 'this_month':
+                $start = Carbon::now()->startOfMonth();
+                $end   = Carbon::now()->endOfMonth();
+                break;
+            case 'last_month':
+                $start = Carbon::now()->subMonth()->startOfMonth();
+                $end   = Carbon::now()->subMonth()->endOfMonth();
+                break;
+            default: // lifetime
+                $start = null;
+                $end   = null;
+        }
+
+        // Build a base qury, applying the daye filter
+        $query = Task::query();
+        if ($start && $end) {
+            $query->whereBetween('order_date', [$start->toDateString(), $end->toDateString()]);
+        }
+
+        // Use the query for all aggregations
+        $totalSales = (clone $query)->sum('total_sales');
+        $totalOrders = (clone $query)->count();
+        $totalQuantity = (clone $query)->sum('quantity');
+        $totalShippingCharges = (clone $query)->sum('shipping_charges');
+
+        $ordersByProduct = (clone $query)
+            ->select('product_id', DB::raw('count(*) as total'))
             ->groupBy('product_id')
             ->pluck('total', 'product_id');
 
-        $genderDistribution = Task::select('buyer_gender', DB::raw('count(*) as total'))
+        $genderDistribution = (clone $query)
+            ->select('buyer_gender', DB::raw('count(*) as total'))
             ->groupBy('buyer_gender')
             ->pluck('total', 'buyer_gender');
 
-        $ordersByDate = Task::selectRaw("DATE_FORMAT(order_date, '%b %Y') as month_label, MIN(order_date) as date_key, COUNT(*) as total")
+        $ordersByDate = (clone $query)
+            ->selectRaw("DATE_FORMAT(order_date, '%b %Y') as month_label, MIN(order_date) as date_key, COUNT(*) as total")
             ->groupBy('month_label')
             ->orderBy('date_key')
             ->pluck('total', 'month_label');
         
-        $ordersByLocation = Task::select('order_location', DB::raw('count(*) as total'))
+        $ordersByLocation = (clone $query)
+            ->select('order_location', DB::raw('count(*) as total'))
             ->groupBy('order_location')
             ->pluck('total', 'order_location');
 
+        // Delta Aggregations : compare with previous period
+        $salesDelta = null;
+            if ($filter === 'this_month') {
+                $prevStart = $start->copy()->subMonth()->startOfMonth();
+                $prevEnd   = $start->copy()->subMonth()->endOfMonth();
+                $prevSales = Task::whereBetween('order_date', [
+                                $prevStart->toDateString(),
+                                $prevEnd->toDateString()
+                            ])->sum('total_sales');
+                if ($prevSales > 0) {
+                    $salesDelta = ($totalSales - $prevSales) / $prevSales * 100;
+                }
+            }
+        
+        $ordersDelta = null;
+            if ($filter === 'this_month') {
+                $prevStart = $start->copy()->subMonth()->startOfMonth();
+                $prevEnd   = $start->copy()->subMonth()->endOfMonth();
+                $prevOrders = Task::whereBetween('order_date', [
+                                $prevStart->toDateString(),
+                                $prevEnd->toDateString()
+                            ])->count();
+                if ($prevOrders > 0) {
+                    $ordersDelta = ($totalOrders - $prevOrders) / $prevOrders * 100;
+                }
+            }
+
         return view('dashboard.index', compact(
+            'filter',
             'totalSales',
             'totalOrders',
             'totalQuantity',
             'totalShippingCharges',
+            'salesDelta',
+            'ordersDelta',
             'ordersByProduct',
             'genderDistribution',
             'ordersByDate',
