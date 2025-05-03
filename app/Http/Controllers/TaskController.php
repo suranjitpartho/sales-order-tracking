@@ -156,6 +156,8 @@ Class TaskController extends Controller
     {
         $totalSales = Task::sum('total_sales');
         $totalOrders = Task::count();
+        $totalQuantity = Task::sum('quantity');
+        $totalShippingCharges = Task::sum('shipping_charges');
 
         $ordersByProduct = Task::select('product_id', DB::raw('count(*) as total'))
             ->groupBy('product_id')
@@ -177,6 +179,8 @@ Class TaskController extends Controller
         return view('dashboard.index', compact(
             'totalSales',
             'totalOrders',
+            'totalQuantity',
+            'totalShippingCharges',
             'ordersByProduct',
             'genderDistribution',
             'ordersByDate',
