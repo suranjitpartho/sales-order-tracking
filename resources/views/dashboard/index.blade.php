@@ -85,6 +85,10 @@
             <h3>Orders by Location</h3>
             <canvas id="locationChart"></canvas>
         </div>
+        <div class="chart-box">
+            <h3>AGE DISTRIBUTION</h3>
+            <canvas id="ageHistogram"></canvas>
+        </div>
     </div>
 </div>
 @endsection
@@ -96,6 +100,7 @@
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/simple-statistics@7.7.4/dist/simple-statistics.min.js"></script>
 <script>
 
     // BAR CHART
@@ -285,5 +290,85 @@
             }
         }
     });
+
+
+    // HISTOGRAM: Buyer Age Distribution
+
+    // 1) Grab labels/counts from PHP
+    const labels = {!! json_encode(array_keys($ageDistribution)) !!};
+    const counts = {!! json_encode(array_values($ageDistribution)) !!};
+
+    // 2) Build a simple 3-point moving average for “density”
+    const density = counts.map((v,i,arr) => {
+        const prev = arr[i-1] ?? v;
+        const next = arr[i+1] ?? v;
+        return (prev + v + next) / 3;
+    });
+
+    // 3) Render Chart.js with touching bars + smoothed line
+    new Chart(document.getElementById('ageHistogram'), {
+        data: {
+            labels,
+            datasets: [
+                {
+                    type: 'line',
+                    label: 'Smoothed',
+                    data: density,
+                    borderColor: '#f9f9f9',
+                    fill: false,
+                    tension: 0.5,
+                    pointRadius: 0,
+                    yAxisID: 'densityAxis'
+                },
+                {
+                    type: 'bar',
+                    label: 'Order Count',
+                    data: counts,
+                    backgroundColor: '#ddd30d',
+                    categoryPercentage: 1.0,
+                    barPercentage:      1.0,
+                    borderRadius: 0,
+                    borderSkipped: true,
+                },
+            ]
+        },
+        options: {
+            maintainAspectRatio: false,
+            layout: {
+                padding: {
+                    top: 0, right: 0, bottom: 10, left: 0 
+                }
+            },
+            scales: {
+                x: {
+                    title: { display: true, text: 'Age Range' },
+                    categoryPercentage: 1.0,
+                    barPercentage:      1.0
+                },
+                y: {
+                    title: { display: true, text: 'Count' },
+                    beginAtZero: true
+                },
+                densityAxis: {
+                    position: 'right',
+                    title:    { display: true, text: 'Smoothed Value' },
+                    grid:     { display: false }
+                }
+            },
+            plugins: {
+                legend: { 
+                    position: 'top',
+                    labels: {
+                        usePointStyle: true,       // use circle instead of box
+                        pointStyle: 'circle',
+                        boxWidth: 8,               // width of the legend marker
+                        padding: 10,
+                        font: { size: 10 }
+                    }
+                }
+            }
+        }
+    });
+
 </script>
 @endpush

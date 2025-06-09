@@ -20,6 +20,7 @@
     --primary: #ddd30d;
     --primaryhover: #e9e369;
     --gray: #bebebe;
+    --darkgray: #535353;
     --positive: #66c748;
     --negative: #f44336;
 }
@@ -248,7 +249,7 @@ body {
     outline: 2px solid var(--primary);
 }
 
-.form-group.checkbox {
+.form-group input[type="checkbox"]  {
     flex-direction: row;
     align-items: center;
     justify-content: center;

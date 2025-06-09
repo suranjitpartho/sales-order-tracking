@@ -12,17 +12,10 @@ The routes are grouped under the 'auth' middleware, which means that only authen
 */
 
 Route::middleware(['auth'])->group(function() {
-
-    // Home Route (redirecting to tasks.index)
     Route::get('/', [TaskController::class, 'index']);
-
-    // Dashboard Route
     Route::get('/dashboard', [TaskController::class, 'dashboard'])->name('dashboard');
-
     // CRUD Routes for tasks
     Route::resource('tasks', TaskController::class);
-
-    // Order Status Change Routes
     Route::get('/tasks/{task}/order-status', [TaskController::class, 'showStatus'])->name('tasks.status.show');
     Route::post('/tasks/{task}/order-status', [TaskController::class, 'storeStatus'])->name('tasks.status.store');
 

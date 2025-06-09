@@ -1,5 +1,6 @@
 {
   "dependencies": {
-    "chartjs-plugin-datalabels": "^2.2.0"
+    "chartjs-plugin-datalabels": "^2.2.0",
+    "simple-statistics": "^7.8.8"
   }
 }

@@ -234,6 +234,28 @@ Class TaskController extends Controller
                 }
             }
 
+        // Age Distribution
+        $raw = (clone $query)
+            ->selectRaw("
+                CASE
+                    WHEN buyer_age BETWEEN 0  AND 10 THEN '0–10'
+                    WHEN buyer_age BETWEEN 11 AND 20 THEN '11–20'
+                    WHEN buyer_age BETWEEN 21 AND 30 THEN '21–30'
+                    WHEN buyer_age BETWEEN 31 AND 40 THEN '31–40'
+                    WHEN buyer_age BETWEEN 41 AND 50 THEN '41–50'
+                    WHEN buyer_age BETWEEN 51 AND 60 THEN '51–60'
+                    ELSE '61+' END AS age_range,
+                COUNT(*) AS total
+            ")
+            ->groupBy('age_range')
+            ->pluck('total','age_range')
+            ->toArray();
+        $allBuckets = ['0–10', '11–20', '21–30', '31–40', '41–50', '51–60', '61+'];
+        $ageDistribution = [];
+        foreach($allBuckets as $bucket) {
+            $ageDistribution[$bucket] = $raw[$bucket] ?? 0;
+        }
+
         return view('dashboard.index', compact(
             'filter',
             'totalSales',
@@ -245,8 +267,8 @@ Class TaskController extends Controller
             'ordersByProduct',
             'genderDistribution',
             'ordersByDate',
-            'ordersByLocation'
+            'ordersByLocation',
+            'ageDistribution',
         ));
     }
-
 }
