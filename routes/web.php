@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TaskController;
+use App\Http\Controllers\AIAgentController;
 
 
 /**
@@ -14,12 +15,14 @@ The routes are grouped under the 'auth' middleware, which means that only authen
 Route::middleware(['auth'])->group(function() {
     Route::get('/', [TaskController::class, 'index']);
     Route::get('/dashboard', [TaskController::class, 'dashboard'])->name('dashboard');
-    // CRUD Routes for tasks
-    Route::resource('tasks', TaskController::class);
+    Route::resource('tasks', TaskController::class);    // CRUD Routes for tasks
     Route::get('/tasks/{task}/order-status', [TaskController::class, 'showStatus'])->name('tasks.status.show');
     Route::post('/tasks/{task}/order-status', [TaskController::class, 'storeStatus'])->name('tasks.status.store');
 
+    Route::get('/ai-agent', [AIAgentController::class, 'index'])->name('ai-agent.index');
+    Route::post('/ai-agent/ask', [AIAgentController::class, 'ask'])->name('ai-agent.ask');
 });
+
 
 /* 
 BREEZE AUTH ROUTE

@@ -1,0 +1,14 @@
+fastapi
+uvicorn
+langchain
+langchain-community
+langchain-experimental
+langchain-core
+langchain-ollama
+pydantic
+python-dotenv
+pymysql
+sqlalchemy
+requests
+mysqlclient
+mysql-connector-python
