@@ -17,10 +17,14 @@ class AIAgentController extends Controller
         $query = $request->input('question');
 
         $response = Http::timeout(600)->post('http://localhost:8001/ask', ['question' => $query]);
+        
         $data = $response->json();
-        $answer = $data['answer'] ?? 'No result found';
+        
+        $answer = $data['answer'] ?? 'No result found, try to make your prompt more specific.';
         $sql = $data['sql'] ?? null;
+        $table = $data['table'] ?? null;
+        $chart = $data['chart'] ?? null;
 
-        return view('ai-agent.index', compact('query', 'answer', 'sql'));
+        return view('ai-agent.index', compact('query', 'answer', 'sql', 'table', 'chart'));
     }
 }

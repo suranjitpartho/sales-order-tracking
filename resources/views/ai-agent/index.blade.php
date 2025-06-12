@@ -23,16 +23,34 @@
         <div>
             <p><i class="fa-solid fa-user"></i> {{ $query }}</p><br>
             <p><i class="fa-solid fa-robot"></i> {{ $answer }}</p><br>
-
-            @if(isset($sql))
-                <div>
-                    <h4>SQL Used:</h4>
-                    <pre>{{ $sql }}</pre>
-                </div>
-            @endif
         </div>
     @endif
-    
+
+    @if (!empty($table))
+        <h5 class="text-lg font-semibold mb-2">Table Result:</h5>
+        <div class="table-wrapper">
+            {!! $table !!}
+        </div>
+    @endif
+
+    <br>
+
+    @if (!empty($chart))
+        <div class="my-4">
+            <h5 class="mb-2">Chart</h5>
+            <img src="data:image/png;base64,{{ $chart }}" alt="Chart" class="img-fluid rounded shadow">
+        </div>
+    @endif
+
+    <br>
+
+    @if(isset($sql))
+        <div>
+            <h4>SQL Used:</h4>
+            <pre>{{ $sql }}</pre>
+        </div>
+    @endif
+
 @endsection
 
 @push('scripts')

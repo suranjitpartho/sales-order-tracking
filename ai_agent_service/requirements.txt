@@ -5,10 +5,13 @@ langchain-community
 langchain-experimental
 langchain-core
 langchain-ollama
+pandas
 pydantic
 python-dotenv
 pymysql
-sqlalchemy
 requests
+sqlalchemy
+sqlparse
+matplotlib
 mysqlclient
 mysql-connector-python
