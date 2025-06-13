@@ -4,13 +4,19 @@
 @section('content')
 
     <h2 class="section-title">My AI SQL Agent</h2>
+
+    @if($errors->any())
+        <div class="mb-4 p-4 bg-red-100 text-red-800 rounded">
+        {{ $errors->first() }}
+        </div>
+    @endif
     
     <form id="askForm" class="form-wrapper" method="POST" action="{{ route('ai-agent.ask') }}">
         @csrf
-        <div class="form-group">
-            <input type="text" name="question" placeholder="Ask something like: 'What is the average buyer age?'" required>
+        <div class="form-group-horizontal">
+            <input type="text" name="question" placeholder="Ask something...." autocomplete="off" required>
+            <button type="submit" class="btn"><i class="fa-solid fa-paper-plane"></i></button>
         </div>
-        <button type="submit" class="btn">Ask</button>
     </form>
     <br>
 
@@ -19,37 +25,48 @@
     </div>
     <br>
 
-    @if(isset($answer))
+    @if(isset($summary))
         <div>
             <p><i class="fa-solid fa-user"></i> {{ $query }}</p><br>
-            <p><i class="fa-solid fa-robot"></i> {{ $answer }}</p><br>
         </div>
     @endif
+    
 
-    @if (!empty($table))
-        <h5 class="text-lg font-semibold mb-2">Table Result:</h5>
-        <div class="table-wrapper">
-            {!! $table !!}
+    @if(! empty($tableHtml))
+        <div class="mb-6">
+        <div class="overflow-auto border border-gray-200 rounded">
+            {!! $tableHtml !!}
         </div>
-    @endif
-
-    <br>
-
-    @if (!empty($chart))
-        <div class="my-4">
-            <h5 class="mb-2">Chart</h5>
-            <img src="data:image/png;base64,{{ $chart }}" alt="Chart" class="img-fluid rounded shadow">
         </div>
     @endif
 
     <br>
 
-    @if(isset($sql))
+    @if(! empty($chartBase64))
+        <div class="mb-6">
+        <img
+            src="data:image/png;base64,{{ $chartBase64 }}"
+            alt="AI-generated chart"
+            class="w-full h-auto rounded shadow-sm"
+        />
+        </div>
+    @endif
+
+    <br>
+
+    @if(isset($summary))
         <div>
-            <h4>SQL Used:</h4>
-            <pre>{{ $sql }}</pre>
+            <p><i class="fa-solid fa-robot"></i> {!! nl2br(e($summary)) !!}</p>
         </div>
     @endif
+    <br>
+
+    @isset($sql)
+        <div class="mb-4">
+        <h4 class="text-md font-medium text-gray-600 mb-1">SQL Used</h4>
+        <pre class="bg-gray-100 p-3 rounded text-sm overflow-auto">{{ $sql }}</pre>
+        </div>
+    @endisset
 
 @endsection
 

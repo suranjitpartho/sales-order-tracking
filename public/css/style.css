@@ -107,6 +107,10 @@ body {
     cursor: pointer;
 }
 
+.btn i {
+    color: var(--dark);
+}
+
 .btn-sm {
     background: var(--primary);
     color: var(--dark);
@@ -171,7 +175,7 @@ body {
 .order-table td {
     padding: 12px 16px;
     text-align: left;
-    border-bottom: 2px solid var(--back);
+    border: 2px solid var(--back);
 }
 
 .order-table th {
@@ -229,23 +233,32 @@ body {
     display: flex;
     flex-direction: column;
 }
+.form-group-horizontal {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
 
+.form-group-horizontal label,
 .form-group label {
     margin-bottom: 8px;
 }
 
-.form-group input,
-.form-group select,
-.form-group textarea {
+.form-group-horizontal input {
+    flex: 1;
+}
+
+.form-group-horizontal input, select, textarea,
+.form-group input, select, textarea {
     padding: 10px;
     border: none;
     border-radius: 6px;
     background: #2b2b40;
 }
 
-.form-group input:focus,
-.form-group select:focus,
-.form-group textarea:focus {
+.form-group-horizontal input:focus, select:focus, textarea:focus,
+.form-group input:focus, select:focus, textarea:focus {
     outline: 2px solid var(--primary);
 }
 
