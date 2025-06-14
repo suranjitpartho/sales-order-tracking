@@ -2,13 +2,13 @@
 @section('title', 'Order List')
 
 @section('content')
-
+<div class="main-card">
     @if (session('success'))
         <div class="success">
             {{ session('success') }}
         </div>
     @endif
-
+    
     <h2 class="section-title">Order List</h2>
     <div class="table-wrapper">
         <table class="order-table">
@@ -47,4 +47,5 @@
             </tbody>
         </table>
     </div>
+</div>
 @endsection

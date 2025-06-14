@@ -2,6 +2,7 @@
 @section('title', 'Create New Order')
 
 @section('content')
+<div class="main-card">
     <h2 class="section-title">Create New Order</h2>
 
     <form action="{{ route('tasks.store') }}" method="POST" class="form-wrapper">
@@ -88,4 +89,5 @@
         </div>
 
     </form>
+</div>
 @endsection

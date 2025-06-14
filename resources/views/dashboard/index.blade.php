@@ -2,92 +2,94 @@
 @section('title', 'Dashboard')
 
 @section('content')
-<div class="dashboard-container">
-    <h2 class="section-title">SALES ANALYTICS</h2>
-
-    <!-- FILTERS -->
-    <div class="filter-buttons">
-        @foreach (['lifetime'=>'Lifetime', 'this_month'=>'This Month', 'last_month'=>'Last Month'] as $key => $label)
-            <a href="{{ route('dashboard', ['filter'=>$key]) }}" class="filter-btn {{ $filter === $key ? 'active' : '' }}">
-                {{ $label }}
-            </a>
-        @endforeach
-    </div>
-
-
-    <!-- CARDS -->
-
-    <div class="card-grid">
-
-        <!-- total sales card -->
-        <div class="stat-card">
-            <i class="fa-solid fa-money-check-dollar card-icon"></i>
-            <h3>TOTAL SALES</h3>
-            <div class="data-row">                
-                <p class="stat">${{ number_format($totalSales, 2) }}</p>
-                @if (!is_null($salesDelta))
-                    <div class="delta-block">
-                        <span class="delta {{ $salesDelta >= 0 ? 'up' : 'down' }}">
-                            <i class="fas fa-arrow-{{ $salesDelta >= 0 ? 'up' : 'down' }}"></i>
-                            {{ abs(round($salesDelta, 1)) }}%
-                        </span>
-                        <small class="delta-note">vs. last month</small>
-                    </div>
-                @endif
+<div class="main-card">
+    <div class="dashboard-container">
+        <h2 class="section-title">SALES ANALYTICS</h2>
+    
+        <!-- FILTERS -->
+        <div class="filter-buttons">
+            @foreach (['lifetime'=>'Lifetime', 'this_month'=>'This Month', 'last_month'=>'Last Month'] as $key => $label)
+                <a href="{{ route('dashboard', ['filter'=>$key]) }}" class="filter-btn {{ $filter === $key ? 'active' : '' }}">
+                    {{ $label }}
+                </a>
+            @endforeach
+        </div>
+    
+    
+        <!-- CARDS -->
+    
+        <div class="card-grid">
+    
+            <!-- total sales card -->
+            <div class="stat-card">
+                <i class="fa-solid fa-money-check-dollar card-icon"></i>
+                <h3>TOTAL SALES</h3>
+                <div class="data-row">                
+                    <p class="stat">${{ number_format($totalSales, 2) }}</p>
+                    @if (!is_null($salesDelta))
+                        <div class="delta-block">
+                            <span class="delta {{ $salesDelta >= 0 ? 'up' : 'down' }}">
+                                <i class="fas fa-arrow-{{ $salesDelta >= 0 ? 'up' : 'down' }}"></i>
+                                {{ abs(round($salesDelta, 1)) }}%
+                            </span>
+                            <small class="delta-note">vs. last month</small>
+                        </div>
+                    @endif
+                </div>
+            </div>
+    
+            <div class="stat-card">
+                <i class="fa-solid fa-list-check card-icon card-icon"></i>
+                <h3>TOTAL ORDERS</h3>
+                <div class="data-row">
+                    <p class="stat">{{ number_format($totalOrders, 0) }}</p>
+                    @if (!is_null($ordersDelta))
+                        <div class="delta-block">
+                            <span class="delta {{ $ordersDelta >= 0 ? 'up' : 'down' }}">
+                                <i class="fas fa-arrow-{{ $ordersDelta >= 0 ? 'up' : 'down' }}"></i>
+                                {{ abs(round($ordersDelta, 1)) }}%
+                            </span>
+                            <small class="delta-note">vs. last month</small>
+                        </div>
+                    @endif
+                </div>
+            </div>
+    
+            <div class="stat-card">
+                <i class="fa-solid fa-boxes-packing card-icon"></i>
+                <h3>TOTAL QUANTITY</h3>
+                <p class="stat">{{ number_format($totalQuantity, 0) }}</p>
+            </div>
+            <div class="stat-card">
+                <i class="fa-solid fa-boxes-packing card-icon"></i>
+                <h3>SHIPPING CHARGES</h3>
+                <p class="stat">${{ number_format($totalShippingCharges, 2) }}</p>
             </div>
         </div>
-
-        <div class="stat-card">
-            <i class="fa-solid fa-list-check card-icon card-icon"></i>
-            <h3>TOTAL ORDERS</h3>
-            <div class="data-row">
-                <p class="stat">{{ number_format($totalOrders, 0) }}</p>
-                @if (!is_null($ordersDelta))
-                    <div class="delta-block">
-                        <span class="delta {{ $ordersDelta >= 0 ? 'up' : 'down' }}">
-                            <i class="fas fa-arrow-{{ $ordersDelta >= 0 ? 'up' : 'down' }}"></i>
-                            {{ abs(round($ordersDelta, 1)) }}%
-                        </span>
-                        <small class="delta-note">vs. last month</small>
-                    </div>
-                @endif
+    
+    
+        <!-- CHARTS -->
+        <div class="chart-grid">
+            <div class="chart-box">
+                <h3>ORDERS BY PRODUCT</h3>
+                <canvas id="barChart"></canvas>
             </div>
-        </div>
-
-        <div class="stat-card">
-            <i class="fa-solid fa-boxes-packing card-icon"></i>
-            <h3>TOTAL QUANTITY</h3>
-            <p class="stat">{{ number_format($totalQuantity, 0) }}</p>
-        </div>
-        <div class="stat-card">
-            <i class="fa-solid fa-boxes-packing card-icon"></i>
-            <h3>SHIPPING CHARGES</h3>
-            <p class="stat">${{ number_format($totalShippingCharges, 2) }}</p>
-        </div>
-    </div>
-
-
-    <!-- CHARTS -->
-    <div class="chart-grid">
-        <div class="chart-box">
-            <h3>ORDERS BY PRODUCT</h3>
-            <canvas id="barChart"></canvas>
-        </div>
-        <div class="chart-box">
-            <h3>Buyer Gender Distribution</h3>
-            <canvas id="pieChart"></canvas>
-        </div>
-        <div class="chart-box">
-            <h3>Orders Over Time</h3>
-            <canvas id="lineChart"></canvas>
-        </div>
-        <div class="chart-box">
-            <h3>Orders by Location</h3>
-            <canvas id="locationChart"></canvas>
-        </div>
-        <div class="chart-box">
-            <h3>AGE DISTRIBUTION</h3>
-            <canvas id="ageHistogram"></canvas>
+            <div class="chart-box">
+                <h3>Buyer Gender Distribution</h3>
+                <canvas id="pieChart"></canvas>
+            </div>
+            <div class="chart-box">
+                <h3>Orders Over Time</h3>
+                <canvas id="lineChart"></canvas>
+            </div>
+            <div class="chart-box">
+                <h3>Orders by Location</h3>
+                <canvas id="locationChart"></canvas>
+            </div>
+            <div class="chart-box">
+                <h3>AGE DISTRIBUTION</h3>
+                <canvas id="ageHistogram"></canvas>
+            </div>
         </div>
     </div>
 </div>

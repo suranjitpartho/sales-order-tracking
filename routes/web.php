@@ -21,6 +21,7 @@ Route::middleware(['auth'])->group(function() {
 
     Route::get('/ai-agent', [AIAgentController::class, 'index'])->name('ai-agent.index');
     Route::post('/ai-agent/ask', [AIAgentController::class, 'ask'])->name('ai-agent.ask');
+    Route::post('/ai-agent/download-csv', [AIAgentController::class, 'downloadCsv'])->name('ai-agent.download.csv');
 });
 
 

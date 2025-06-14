@@ -1,0 +1,250 @@
+@import url("https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+
+/* Reset Defaults */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Barlow", sans-serif;
+    font-weight: 400;
+    color: var(--gray);
+    font-size: 14px;
+    font-style: normal;
+}
+
+/* Default Colors */
+:root {
+    --dark: #1b1c2a;
+    --darkhover: #212234;
+    --dark3: #2e2f3f;
+    --back: #252737;
+    --primary: #ddd30d;
+    --primaryhover: #e9e369;
+    --gray: #bebebe;
+    --darkgray: #535353;
+    --olive1: #a1b892;
+    --positive: #66c748;
+    --negative: #f44336;
+}
+
+
+
+
+/* CANVAS SETUP */
+
+.agent-canvas {
+    width: 100%;
+    height: 100%;
+    background-color: #588a5a;
+    display: flex;
+    flex-direction: row;
+    overflow: hidden;
+}
+.agent-canvas .left-pannel {
+    width: 20%;
+    height: 100%;
+    background-color: var(--dark);
+    border: solid 2px var(--dark3);
+    border-right: none;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+.agent-canvas .database-list {
+    flex: 0 0 70%; 
+    padding: 20px 20px;
+    border-bottom: solid 2px var(--dark3);
+    overflow-y: auto;
+}
+.agent-canvas .sql-pannel {
+    flex: 0 0 30%;  
+    padding: 20px 20px;
+    overflow-y: auto;
+}
+.agent-canvas .main-pannel {
+    width: 80%;
+    height: 100%;
+    padding: 15px;
+    background-color: var(--dark);
+    border: solid 2px var(--dark3);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    overflow: hidden;
+}
+
+
+
+
+/* DATABASE LISTS */
+
+.left-pannel .database {
+    color: #c4c4c4;
+    font-size: 16px;
+    margin-bottom: 5px;
+}
+.left-pannel .database i {
+    color: #f43d3d;
+    margin-right: 5px;
+}
+
+.left-pannel ul {
+    list-style: none;
+    padding-left: 15px;
+}
+
+.left-pannel summary::-webkit-details-marker {
+    display: none;
+}
+.left-pannel summary {
+    list-style: none;
+    font-size: 16px;
+    cursor: pointer;
+    color: var(--olive1);
+    margin-top: 5px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.left-pannel summary::before {
+    content: "\f0da";
+    font-weight: 900;
+    font-family: "Font Awesome 6 Free";
+    font-size: 16px;
+    color: #ebaf2e;
+    position: relative;
+    display: inline-block;
+    top: 1px;
+    transition: transform 0.2s ease;
+}
+.left-pannel details[open] > summary::before {
+    transform: rotate(90deg);
+}
+.left-pannel li {
+    margin: 4px 0;
+}
+.left-pannel .column {
+    font-size: 16px;
+}
+.left-pannel .column i {
+    color: #b2df38;
+    font-size: 10px;
+    margin-right: 5px;
+}
+
+
+
+
+/* SQL PANNEL */
+
+.database-list h4,
+.sql-box h4 {
+    margin-bottom: 10px;
+}
+
+.language-sql {
+    background-color: #181923 !important;
+    border-radius: 6px !important;
+    line-height: 1.5;
+}
+
+
+
+/* MESSAGE INPUT */
+
+.form-wrapper-chat {
+    margin-bottom: 30px;
+    width: 40%;
+}
+
+.form-group-chat {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    background-color: var(--back);
+    border-radius: 6px;
+    overflow: hidden;
+    height: 45px;
+}
+
+.form-group-chat input[type="text"] {
+    flex: 1;
+    padding: 5px 14px;
+    border: none;
+    background: transparent;
+    font-size: 16px;
+    outline: none;
+}
+
+.btn-chat {
+    padding: 10px 16px;
+    background: transparent; 
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--gray);
+}
+.btn-chat i {
+    font-size: larger;
+}
+
+
+/* CHAT CONTENT */
+
+.chat-content {
+    flex: 1;
+    overflow-y: auto;
+    margin-top: 20px;
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+}
+
+.user-input {
+    display: inline-flex;
+    justify-content:center;
+    align-items: center;
+    margin-bottom: 12px;
+    gap: 10px;
+}
+
+.user-input .bubble {
+    background-color: var(--back);
+    color: var(--gray);
+    padding: 10px 14px;
+    border-radius: 10px;
+    max-width: 70%;
+    line-height: 1.5;
+    display: flex;
+    align-items: center; 
+    gap: 10px;
+}
+
+.user-input .user-icon {
+    color: var(--olive1);
+    display: flex;
+    align-self: center;
+    font-size: 18px !important;
+    line-height: 1;
+    flex-shrink: 0;
+}
+
+.table-chart-response {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 12px;
+    width: 100%;
+}
+
+.timer-box {
+    margin-bottom: 10px;
+}
+
+
+
