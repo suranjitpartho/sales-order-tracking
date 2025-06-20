@@ -29,51 +29,58 @@
 
 
 
-
 /* CANVAS SETUP */
 
 .agent-canvas {
     width: 100%;
     height: 100%;
-    background-color: #588a5a;
+    background-color: var(--back);
     display: flex;
     flex-direction: row;
     overflow: hidden;
 }
+
 .agent-canvas .left-pannel {
+    margin: 20px 10px 20px 20px;
     width: 20%;
-    height: 100%;
-    background-color: var(--dark);
-    border: solid 2px var(--dark3);
-    border-right: none;
+    background-color: var(--back);
     display: flex;
     flex-direction: column;
     overflow: hidden;
+    gap: 20px;
 }
+
 .agent-canvas .database-list {
-    flex: 0 0 70%; 
-    padding: 20px 20px;
-    border-bottom: solid 2px var(--dark3);
-    overflow-y: auto;
-}
-.agent-canvas .sql-pannel {
-    flex: 0 0 30%;  
-    padding: 20px 20px;
-    overflow-y: auto;
-}
-.agent-canvas .main-pannel {
-    width: 80%;
-    height: 100%;
-    padding: 15px;
     background-color: var(--dark);
-    border: solid 2px var(--dark3);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    flex: 7; 
+    padding: 20px 20px;
+    overflow-y: auto;
+}
+
+.agent-canvas .sql-pannel {
+    background-color: var(--dark);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    flex: 3;  
+    padding: 20px 20px;
+    overflow-y: auto;
+}
+
+.agent-canvas .main-pannel {
+    margin: 20px 20px 20px 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    background-color: var(--dark);
+    border-radius: 8px;
+    width: 80%;
+    padding: 15px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
     overflow: hidden;
 }
-
 
 
 

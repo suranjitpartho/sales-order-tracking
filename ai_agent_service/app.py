@@ -77,24 +77,24 @@ async def ask(q: Query):
 
 
             # Generate summary 
-            # insight_mode = "chart" if wants_chart else "table"
-            # insight_prompt = {
-            #     "role": "user", 
-            #     "content": (
-            #         f"The following {insight_mode} was generated using this data:\n\n"
-            #         f"X-axis: {x_col if wants_chart else 'N/A'}\n"
-            #         f"Y-axis: {y_col if wants_chart else 'N/A'}\n\n"
-            #         f"Data:\n{rows}\n\n"
-            #         f"Please summarize the insights from this {insight_mode}. "
-            #         "Use 1 to 3 lines max. If it's a chart, comment on patterns, anomalies, or comparisons. "
-            #         "If it's a table, summarize totals, groupings, or noticeable metrics."
-            #     )
-            # }
-            # insight = await client.chat.completions.create(
-            #     model="gpt-3.5-turbo",
-            #     messages=[{"role": "system", "content": "You are a smart data analyst. Interpret charts or tables briefly — no fluff, just meaningful observations in 1–3 lines."}, insight_prompt]
-            # )
-            # summary = insight.choices[0].message.content.strip()
+            insight_mode = "chart" if wants_chart else "table"
+            insight_prompt = {
+                "role": "user", 
+                "content": (
+                    f"The following {insight_mode} was generated using this data:\n\n"
+                    f"X-axis: {x_col if wants_chart else 'N/A'}\n"
+                    f"Y-axis: {y_col if wants_chart else 'N/A'}\n\n"
+                    f"Data:\n{rows}\n\n"
+                    f"Please summarize the insights from this {insight_mode}. "
+                    "Use 1 to 3 lines max. If it's a chart, comment on patterns, anomalies, or comparisons. "
+                    "If it's a table, summarize totals, groupings, or noticeable metrics."
+                )
+            }
+            insight = await client.chat.completions.create(
+                model="gpt-3.5-turbo",
+                messages=[{"role": "system", "content": "You are a smart data analyst. Interpret charts or tables briefly — no fluff, just meaningful observations in 1–3 lines."}, insight_prompt]
+            )
+            summary = insight.choices[0].message.content.strip()
 
 
             # Handle chart generation
@@ -110,7 +110,7 @@ async def ask(q: Query):
                 chart_b64 = generate_chart(rows, x_col, y_col, kind)["image_base64"]
 
                 return {
-                    "summary": None,
+                    "summary": summary,
                     "sql": formatted_sql,
                     "chart": chart_b64
                 }
@@ -119,7 +119,7 @@ async def ask(q: Query):
             df = DataFrame(rows)
             table_html = df.to_html(index=False, classes="order-table")
             return {
-                "summary": None,
+                "summary": summary,
                 "sql":     formatted_sql,
                 "table":   table_html,
                 "table_rows": rows

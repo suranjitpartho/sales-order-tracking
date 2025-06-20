@@ -12,11 +12,11 @@
     
 
     <!-- The Main Card -->
-    <main class="container">
-        <div class="main-card">
+    <div class="content-wrapper">
+        <div class="main-card auth">
             @yield('content')
         </div>
-    </main>
+    </div>
 
     
 </body>

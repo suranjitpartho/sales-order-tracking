@@ -45,9 +45,9 @@
 
 
     <!-- Footer -->
-    <footer>
-        <p>&copy; {{ date('Y') }} | Suranjit Das</p>
-    </footer>
+    <div class="footer">
+        <p>&copy; {{ date('Y') }} | SURANJIT DAS</p>
+    </div>
 
     @stack('scripts')
 
