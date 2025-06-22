@@ -1,5 +1,4 @@
 from sqlalchemy import create_engine, inspect
-from typing import List
 
 class SchemaInfoTool:
     def __init__(self, db_uri: str):

@@ -10,11 +10,12 @@ from tools.sql_tool import SQLTool
 from tools.schema_tool import SchemaInfoTool
 
 
-
 llm = DeepSeekWrapper()
+
 sql = SQLTool("mysql+pymysql://user:123@localhost:3306/salesorder_db")
 schema_tool = SchemaInfoTool("mysql+pymysql://user:123@localhost:3306/salesorder_db")
 server = Server("deepseek-sql-server")
+
 
 def make_json_safe(obj):
     if isinstance(obj, Decimal):
@@ -24,6 +25,7 @@ def make_json_safe(obj):
     elif isinstance(obj, list):
         return [make_json_safe(v) for v in obj]
     return obj
+
 
 @server.list_tools()
 async def list_tools() -> List[Tool]:
@@ -63,6 +65,7 @@ async def call_tool(name: str, arguments: Dict[str, Any]) -> List[TextContent]:
 
     if results and "error" not in results[0]:
         rows = make_json_safe(results)
+
         df = DataFrame(rows)
         table_html = df.to_html(index=False, classes="order-table", border=0)
         formatted_sql = sqlparse.format(sql_query, reindent=True, keyword_case='upper')
@@ -70,13 +73,11 @@ async def call_tool(name: str, arguments: Dict[str, Any]) -> List[TextContent]:
         return [TextContent(
             type="text",
             text=json.dumps({
-                #"summary": None,
                 "sql": formatted_sql,
                 "table": table_html,
                 "table_rows": rows
             })
         )]
-    
     else:
         return [TextContent(type="text", text=json.dumps({
             "error": results[0].get("error", "Unknown error"),

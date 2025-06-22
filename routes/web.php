@@ -26,6 +26,8 @@ Route::middleware(['auth'])->group(function() {
 
     Route::get('/mcp', [MCPServerController::class, 'index'])->name('mcp.index');
     Route::post('/mcp', [MCPServerController::class, 'ask'])->name('mcp.ask');
+    Route::post('/summary', [MCPServerController::class, 'summary'])->name('mcp.summary');
+
 });
 
 

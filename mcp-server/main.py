@@ -1,12 +1,12 @@
+import json
 from fastapi import FastAPI, Request
-from mcp_config import call_tool, list_tools
 from fastapi.responses import JSONResponse
+from mcp_config import call_tool, llm
 
 app = FastAPI()
 
 @app.post("/mcp")
 async def mcp_handler(request: Request):
-    try:
         data = await request.json()
         tool_name = data["tool"]
         parameters = data.get("parameters", {})
@@ -18,5 +18,15 @@ async def mcp_handler(request: Request):
 
         return JSONResponse(content=[res.model_dump() for res in results])
 
-    except Exception as e:
-        return JSONResponse(content={"error": str(e)}, status_code=500)
+# @app.post("/summary")
+# async def summary_handler(request: Request):
+#     body = await request.json()
+#     question = body.get("question")
+#     rows     = body.get("table_rows", [])
+
+#     if not question or not rows:
+#         return JSONResponse(content={"error": "Missing 'question' or 'table_rows'"}, status_code=400)
+
+#     summary = llm.generate_summary(question, rows)
+#     return JSONResponse(content={"summary": summary})
+

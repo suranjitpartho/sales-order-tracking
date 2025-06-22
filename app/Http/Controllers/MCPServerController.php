@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Http\Request;
 
 class MCPServerController extends Controller
 {
@@ -16,7 +16,7 @@ class MCPServerController extends Controller
     {
         $query = $request->input('question');
 
-        $response = Http::timeout(150)
+        $response = Http::timeout(200)
             ->post('http://127.0.0.1:8001/mcp', [
                 'tool'       => 'natural_language_sql_tool',
                 'parameters' => ['question' => $query]
@@ -27,12 +27,20 @@ class MCPServerController extends Controller
 
         return view('mcp-server.index', [
             'question'    => $query,
-            #'summary'     => $data['summary'] ?? null,
             'sql'         => $data['sql'] ?? null,
             'tableHtml'   => $data['table'] ?? null,
             'tableRows'   => $data['table_rows'] ?? [],
-            'chartBase64' => $data['chart_base64'] ?? null,
         ]);
     }
+
+    // public function summary(Request $request)
+    // {
+    //     $response = Http::timeout(100)->post('http://127.0.0.1:8001/summary', [
+    //         'question'    => $request->input('question'),
+    //         'table_rows'  => $request->input('table_rows'),
+    //     ]);
+
+    //     return $response->json();
+    // }
 
 }

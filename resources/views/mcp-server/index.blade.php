@@ -37,13 +37,6 @@
                 @php $tableRows = $tableRows ?? []; @endphp
                 <div class="table-chart-response">
                     {!! $tableHtml !!}
-                    {{-- @if(!empty($tableRows))
-                        <form action="{{ route('ai-agent.download.csv') }}" method="POST">
-                            @csrf
-                            <input type="hidden" name="table_rows" value='@json($tableRows)'>
-                            <button type="submit" class="btn-icon" title="Download as CSV"><i class="fa-regular fa-floppy-disk"></i></button>
-                        </form>
-                    @endif --}}
                 </div>
             @endif
 
@@ -54,12 +47,12 @@
                 </div>
             @endif --}}
 
-
+            {{-- <div id="summary-response"></div> --}}
             {{-- @if(isset($summary))
                 <div class="user-input">
                     <div class="bubble">
                         <i class="fa-solid fa-robot user-icon"></i>
-                        <span>{!! nl2br(e($summary)) !!}</span>
+                        <span>{{ ($summary) }}</span>
                     </div>
                 </div>
             @endif --}}
@@ -82,46 +75,6 @@
     </div>
 
 </div>
-
-
-
-
-
-
-
-
-{{-- <div class="container">
-    <h2 class="mb-4">Ask Your Database (MCP Server)</h2>
-
-    <form action="{{ route('mcp.ask') }}" method="POST" class="mb-4">
-        @csrf
-        <div class="form-group mb-3">
-            <label for="question">Enter your question:</label>
-            <input type="text" name="question" id="question" class="form-control" value="{{ old('question', $question ?? '') }}" required>
-        </div>
-        <button type="submit" class="btn btn-primary">Ask</button>
-    </form>
-
-    @if (!empty($sql))
-        <h5 class="mt-4">SQL Used:</h5>
-        <pre class="bg-dark text-white p-3 rounded">{{ $sql }}</pre>
-    @endif
-
-    @if(! empty($tableHtml))
-        <div class="table-chart-response">
-            {!! $tableHtml !!}
-
-            @if(!empty($tableRows))
-                <form action="{{ route('ai-agent.download.csv') }}" method="POST">
-                    @csrf
-                    <input type="hidden" name="table_rows" value='@json($tableRows)'>
-                </form>
-            @endif
-        </div>
-    @endif
-
-</div> --}}
-
 
 @endsection
 
@@ -153,4 +106,43 @@
         });
     </script>
 
+    {{-- @if (!empty($tableRows))
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            fetch("{{ url('/summary') }}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                },
+                body: JSON.stringify({
+                    question: @json($question),
+                    table_rows: @json($tableRows)
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                const summary = data.summary ?? 'No summary could be generated.';
+                const bubbleHTML = `
+                    <div class="user-input">
+                        <div class="bubble">
+                            <i class="fa-solid fa-robot user-icon"></i>
+                            <span>${summary}</span>
+                        </div>
+                    </div>`;
+                document.getElementById("summary-response").innerHTML = bubbleHTML;
+            })
+            .catch(err => {
+                document.getElementById("summary-response").innerHTML = `
+                    <div class="user-input">
+                        <div class="bubble">
+                            <i class="fa-solid fa-robot user-icon"></i>
+                            <span>Error generating summary.</span>
+                        </div>
+                    </div>`;
+                console.error("Summary Error:", err);
+            });
+        });
+    </script>
+    @endif --}}
 @endpush
