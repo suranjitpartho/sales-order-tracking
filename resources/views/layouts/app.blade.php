@@ -20,12 +20,12 @@
     <!-- NAVIGATION BAR -->
     
     <nav class="navbar">
-        <a href="{{ route('tasks.index') }}" class="logo">SALES ORDER TRACKING</a>
+        <a href="{{ route('orders.index') }}" class="logo">SALES ORDER TRACKING</a>
         <div class="navigation-buttons">
             <a href="{{ route('dashboard') }}" class="btn-icon" title="Dashboard"><i class="fa-solid fa-chart-simple"></i></a>
             <a href="{{ route('ai-agent.index') }}" class="btn-icon" title="Ai Agent"><i class="fa-solid fa-robot"></i></a>
-            <a href="{{ route('tasks.index') }}" class="btn-icon" title="Orders"><i class="fa-regular fa-file-lines"></i></a>
-            <a href="{{ route('tasks.create') }}" class="btn-icon" title="Create"><i class="fa-solid fa-square-plus"></i></a>
+            <a href="{{ route('orders.index') }}" class="btn-icon" title="Orders"><i class="fa-regular fa-file-lines"></i></a>
+            <a href="{{ route('orders.create') }}" class="btn-icon" title="Create"><i class="fa-solid fa-square-plus"></i></a>
             @auth
             <form method="POST" action="{{ route('logout') }}">
                 @csrf

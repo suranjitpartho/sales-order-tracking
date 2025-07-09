@@ -9,7 +9,7 @@ engine = create_engine("mysql+mysqlconnector://user:123@localhost:3306/salesorde
 # schema summary to define database to model
 def get_schema_summary() -> str:
     inspector = inspect(engine)
-    include_tables = {"tasks", "statuslog"}
+    include_tables = {"orders", "order_status_log"}
     lines = ["You have access to a MySQL database called salesorder_db."]
     
     for table_name in inspector.get_table_names():

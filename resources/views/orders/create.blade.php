@@ -5,7 +5,7 @@
 <div class="main-card">
     <h2 class="section-title">Create New Order</h2>
 
-    <form action="{{ route('tasks.store') }}" method="POST" class="form-wrapper">
+    <form action="{{ route('orders.store') }}" method="POST" class="form-wrapper">
         @csrf
 
         <div class="form-group">
@@ -24,7 +24,6 @@
                 <option value="SX9005">SX9005</option>
                 <option value="SX9006">SX9006</option>
             </select>
-            <!-- <input type="text" name="product_id" id="product_id" :value="old('product_id')" minlength="6" maxlength="6" required placeholder="Product ID"> -->
         </div>
 
         <div class="form-group">
@@ -64,13 +63,13 @@
         </div>
 
         <div class="form-group">
-            <label for="sales_price">Sales Price</label>
-            <input type="number" name="sales_price" id="sales_price" step="0.01" min="0" required>
+            <label for="base_price">Base Price</label>
+            <input type="number" name="base_price" id="base_price" step="0.01" min="0" required>
         </div>
 
         <div class="form-group">
-            <label for="shipping_charges">Shipping Charges (if international)</label>
-            <input type="number" name="shipping_charges" id="shipping_charges" step="0.01" min="0">
+            <label for="shipping_fee">Shipping Fee (if international)</label>
+            <input type="number" name="shipping_fee" id="shipping_fee" step="0.01" min="0">
         </div>
 
         <div class="form-group">
@@ -85,7 +84,7 @@
 
         <div class="form-actions">
             <button type="submit" class="btn">Create Order</button>
-            <a href="{{ route('tasks.index') }}" class="btn">Back to Order List</a>
+            <a href="{{ route('orders.index') }}" class="btn">Back to Order List</a>
         </div>
 
     </form>

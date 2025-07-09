@@ -2,115 +2,75 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Task;
-use App\Models\StatusLog;
+use App\Models\Order;
+use App\Models\OrderStatusLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 
-Class TaskController extends Controller
+Class OrderController extends Controller
 {
     // INDEX - Show all orders
     public function index()
     {
-        $tasks = Task::latest()->get();
-        return view('tasks.index', compact('tasks'));
+        $orders = Order::latest()->get();
+        return view('orders.index', compact('orders'));
     }
 
 
     // CREATE - Show form to create a new order
     public function create()
     {
-        return view('tasks.create');
+        return view('orders.create');
     }
 
 
-    // STORE - This method handles the form submission for creating a new order
+    // STORE - Create a new order
     public function store(Request $request)
     {
-
-        // Validate Form Input
         $validated = $request->validate([
             'order_date' => 'required|date',
-            // 'product_id' => 'required|string|size:6',
             'product_id' => 'required|in:SX9001,SX9002,SX9003,SX9004,SX9005,SX9006',
             'product_category' => 'required|in:clothing,ornaments,other',
             'buyer_gender' => 'required|in:male,female',
             'buyer_age' => 'required|integer|min:0',
             'order_location' => 'required|string',
             'international_shipping' => 'sometimes|boolean',
-            'sales_price' => 'required|numeric|min:0',
-            'shipping_charges' => 'nullable|numeric|min:0',
+            'base_price' => 'required|numeric|min:0',
+            'shipping_fee' => 'nullable|numeric|min:0',
             'quantity' => 'required|integer|min:1',
             'remarks' => 'nullable|string',
         ]);
 
-        // Handle Checkbox value
         $validated['international_shipping'] = $request->has('international_shipping');
-
-        // Handle Shipping Charges
-        $validated['shipping_charges'] = $validated['international_shipping']
-            ? ($validated['shipping_charges'] ?? 0)
+        $validated['shipping_fee'] = $validated['international_shipping']
+            ? ($validated['shipping_fee'] ?? 0)
             : 0;
+        $validated['unit_price'] = $validated['base_price'] + $validated['shipping_fee'];
+        $validated['final_amount'] = $validated['unit_price'] * $validated['quantity'];
+        $validated['status'] = 'pending';
+        $order = Order::create($validated);
 
-        // Calculated Fields
-        $validated['sales_per_unit'] = $validated['sales_price'] + $validated['shipping_charges'];
-        $validated['total_sales'] = $validated['sales_per_unit'] * $validated['quantity'];
-
-        // Create a new order
-        $task = Task::create($validated);
-
-        // Immediately log initial status as "Pending"
-        $task->statuslog()->create([
-            'status' => 'Pending',
-            'changed_at' => now(),
-        ]);
-
-        return redirect()->route('tasks.index')->with('success', 'Order added successfully!');
+        return redirect()->route('orders.index')->with('success', 'Order added successfully!');
     }
-
-    // STORE ORDER STATUS - This method handles the form submission for updating the order status
-    public function storeStatus(Request $request, Task $task)
-    {
-        $validated = $request->validate([
-            'status' => 'required|in:Pending,Shipped,Delivered,Cancelled'
-        ]);
-
-        StatusLog::create([
-            'task_id' => $task->id,
-            'status' => $validated['status'],
-            'changed_at' => now(),
-        ]);
-        return redirect()->route('tasks.index')->with('success', 'Order status updated successfully.');
-    }
-
 
     // SHOW - Show a single order
-    public function show(Task $task)
+    public function show(Order $order)
     {
-        return view('tasks.show', compact('task'));
+        return view('orders.show', compact('order'));
     }
-    
-    // SHOW STATUS LOGS - Show order status logs
-    public function showStatus(Task $task)
-    {
-        // $statusLogs = $task->statuslog()->orderBy('changed_at', 'desc')->get();
-        return view('tasks.order-status', compact('task'));
-    }
-
 
     // EDIT - Show form to edit an order
-    public function edit(Task $task)
+    public function edit(Order $order)
     {
-        return view('tasks.edit', compact('task'));
+        return view('orders.edit', compact('order'));
     }
     
-
-    // UPDATE - This method handles the form submission for updating an order
-    public function update(Request $request, Task $task)
+    // UPDATE - Updating an order
+    public function update(Request $request, Order $order)
     {
-        // Validate Form Input
         $validated = $request->validate([
             'order_date' => 'required|date',
             'product_id' => 'required|in:SX9001,SX9002,SX9003,SX9004,SX9005,SX9006',
@@ -119,36 +79,56 @@ Class TaskController extends Controller
             'buyer_age' => 'required|integer|min:0',
             'order_location' => 'required|string',
             'international_shipping' => 'sometimes|boolean',
-            'sales_price' => 'required|numeric|min:0',
-            'shipping_charges' => 'nullable|numeric|min:0',
+            'base_price' => 'required|numeric|min:0',
+            'shipping_fee' => 'nullable|numeric|min:0',
             'quantity' => 'required|integer|min:1',
             'remarks' => 'nullable|string',
         ], [
             'product_id.size' => 'Product ID must be exactly 6 characters.',
         ]);
 
-        // Handle Checkbox value
         $validated['international_shipping'] = $request->has('international_shipping');
-
-        // Handle Shipping Charges
-        $validated['shipping_charges'] = $validated['international_shipping']
-        ? ($validated['shipping_charges'] ?? 0)
+        $validated['shipping_fee'] = $validated['international_shipping']
+        ? ($validated['shipping_fee'] ?? 0)
         : 0;
-
-        // Calculated Fields
-        $validated['sales_per_unit'] = $validated['sales_price'] + $validated['shipping_charges'];
-        $validated['total_sales'] = $validated['sales_per_unit'] * $validated['quantity'];
-            
-        $task->update($validated);
-        return redirect()->route('tasks.index')->with('success', 'Order updated successfully!');
+        $validated['unit_price'] = $validated['base_price'] + $validated['shipping_fee'];
+        $validated['final_amount'] = $validated['unit_price'] * $validated['quantity'];
+        $order->update($validated);
+        return redirect()->route('orders.index')->with('success', 'Order updated successfully!');
     }
 
-
     // DESTROY - Delete an order
-    public function destroy(Task $task)
+    public function destroy(Order $order)
     {
-        $task->delete();
-        return redirect()->route('tasks.index')->with('success', 'Order deleted successfully!');
+        $order->delete();
+        return redirect()->route('orders.index')->with('success', 'Order deleted successfully!');
+    }
+
+    // UPDATE STATUS - Update the status of an order
+    public function updateStatus(Request $request, Order $order)
+    {
+        $validated = $request->validate([
+            'status' => 'required|in:pending,processing,shipped,delivered,cancelled',
+        ]);
+
+        $previousStatus = $order->status;
+        $newStatus = $validated['status'];
+
+        if ($previousStatus !== $newStatus) {
+            // Update the order status
+            $order->update(['status' => $newStatus]);
+
+            // Create a log entry
+            OrderStatusLog::create([
+                'order_id' => $order->id,
+                'previous_status' => $previousStatus,
+                'changed_status' => $newStatus,
+                'changed_at' => now(),
+                'changed_by' => Auth::id(),
+            ]);
+        }
+
+        return redirect()->route('orders.index')->with('success', 'Order status updated successfully!');
     }
 
 
@@ -175,16 +155,16 @@ Class TaskController extends Controller
         }
 
         // Build a base qury, applying the daye filter
-        $query = Task::query();
+        $query = Order::query();
         if ($start && $end) {
             $query->whereBetween('order_date', [$start->toDateString(), $end->toDateString()]);
         }
 
         // Use the query for all aggregations
-        $totalSales = (clone $query)->sum('total_sales');
+        $totalSales = (clone $query)->sum('final_amount');
         $totalOrders = (clone $query)->count();
         $totalQuantity = (clone $query)->sum('quantity');
-        $totalShippingCharges = (clone $query)->sum('shipping_charges');
+        $totalShippingCharges = (clone $query)->sum('shipping_fee');
 
         $ordersByProduct = (clone $query)
             ->select('product_id', DB::raw('count(*) as total'))
@@ -212,10 +192,10 @@ Class TaskController extends Controller
             if ($filter === 'this_month') {
                 $prevStart = $start->copy()->subMonth()->startOfMonth();
                 $prevEnd   = $start->copy()->subMonth()->endOfMonth();
-                $prevSales = Task::whereBetween('order_date', [
+                $prevSales = Order::whereBetween('order_date', [
                                 $prevStart->toDateString(),
                                 $prevEnd->toDateString()
-                            ])->sum('total_sales');
+                            ])->sum('final_amount');
                 if ($prevSales > 0) {
                     $salesDelta = ($totalSales - $prevSales) / $prevSales * 100;
                 }
@@ -225,7 +205,7 @@ Class TaskController extends Controller
             if ($filter === 'this_month') {
                 $prevStart = $start->copy()->subMonth()->startOfMonth();
                 $prevEnd   = $start->copy()->subMonth()->endOfMonth();
-                $prevOrders = Task::whereBetween('order_date', [
+                $prevOrders = Order::whereBetween('order_date', [
                                 $prevStart->toDateString(),
                                 $prevEnd->toDateString()
                             ])->count();

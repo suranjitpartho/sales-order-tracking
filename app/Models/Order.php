@@ -6,16 +6,17 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * TASK MODEL
+ * ORDER MODEL
  * 
- * This model represents a Order Table in the application.
- * It contains the properties and methods to interact with the database.
+ * This model represents a Order Table.
  * The model is used to perform CRUD operations on the Order Table.
  */
 
-class Task extends Model
+class Order extends Model
 {
     use HasFactory;
+
+    protected $table = 'orders';
 
     protected $fillable = [
         'order_date',
@@ -25,16 +26,18 @@ class Task extends Model
         'buyer_age',
         'order_location',
         'international_shipping',
-        'sales_price',
-        'shipping_charges',
-        'sales_per_unit',
+        'base_price',
+        'shipping_fee',
+        'unit_price',
         'quantity',
-        'total_sales',
+        'final_amount',
+        'status',
         'remarks',
     ];
 
-    public function statuslog()
+    public function statusLogs()
     {
-        return $this->hasMany(StatusLog::class);
+        return $this->hasMany(OrderStatusLog::class);
     }
+
 }
